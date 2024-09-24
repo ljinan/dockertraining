@@ -1,0 +1,16 @@
+# Docker compose version
+version: '3'
+
+# Services refers to the type of container
+services:
+  redis-server:
+    image: 'redis'
+
+  node-app:
+    restart: on-failure
+    build: .
+    ports:
+      # - in a yaml file is how we specify an array
+      - "4001:8081"   #<local machine port>:<container port>
+      
+      
