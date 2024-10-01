@@ -3,6 +3,7 @@ services:
   - docker
 
 before_install:
+  - cd frontend
   - docker build -t ljinan/frontend -f Dockerfile.dev .
 
 script:
