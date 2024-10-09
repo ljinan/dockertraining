@@ -7,7 +7,7 @@ before_install:
   - docker build -t ljinan/frontend -f Dockerfile.dev .
 
 script:
-  - docker run -e CT=true ljinan/frontend npm run test
+  - docker run -e CT=true ljinan/frontend npm run test -- --watchAll=false
   #- docker run ljinan/frontend npm run test -- --coverage
 
 Deploy:
