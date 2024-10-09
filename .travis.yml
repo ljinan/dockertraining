@@ -4,7 +4,8 @@ services:
 
 before_install:
   - cd frontend
-  - docker build -t ljinan/frontend -f Dockerfile.dev .
+  #- docker build -t ljinan/frontend -f Dockerfile.dev .
+  - docker build -t ljinan/frontend -f Dockerfile .
 
 script:
   - docker run -e CT=true ljinan/frontend npm run test -- --watchAll=false
