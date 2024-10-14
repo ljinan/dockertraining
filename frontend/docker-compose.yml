@@ -1,14 +1,20 @@
 version: '3'
 services:
   web:
+  #can be any name
     build:
       context: .
+      # specify where all the files and folders for this image will be pulled from
       dockerfile: Dockerfile.dev
+      #selecting which docker file to build image from. dockerfile.dev from within the current directory
     ports:
       - "3000:3000"
+      #map port 3000 outisde the container to inside the container
     volumes:
       - /home/node/app/node_modules
+      #no : , will not map anything from outside of the container
       - .:/home/node/app
+      #map current folder outside the container to the /home/node/app directory within the container
   tests:
     stdin_open: true
     build:
