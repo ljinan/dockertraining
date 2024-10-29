@@ -19,4 +19,4 @@ sub.on('message', (channel,message) => {
     redisClient.hset('values', message, fib(parseInt(message)));
 })
 
-xub.subscrube('insert');
+sub.subscribe('insert');

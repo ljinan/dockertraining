@@ -1,4 +1,5 @@
 const keys = require('./keys');
+const redis = require('redis');
 
 //Express App Setup
 const express = require('express'); //require express library
