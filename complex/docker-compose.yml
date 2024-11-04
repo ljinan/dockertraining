@@ -1,0 +1,28 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:latest'
+  redis:
+    image: 'redis:latest'
+  server:
+    build:
+      dockerfile: Dockerfile.dev
+      # name of the docker file only
+      context: ./server
+      # context is used to specify which folder to look for the dockerfile
+      # provide a path to the server directory
+      volumes:
+        - /home/node/app/node_modules
+        - ./server:/home/node/app
+      # when environemnt variable is specified inside the docker-compose file, this information is not being encoded inside the image.
+      # instead, it is only set in the container at runtime
+      # variableName=value => sets a varialbe in the container at run time
+      # variableName => sets a variable in the container at run time where the value of the variable is taken from the machine
+      environment:
+        - REDIS_HOST=redis
+        - REDIS_PORT=6379 #default redis port
+        - PGUSER=postgres
+        - PGHOST=postgres
+        - PGDATABASE=postgres
+        - PGPASSWORD=postgres_password
+        - PGPORT=5432
