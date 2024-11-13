@@ -6,6 +6,16 @@ services:
       - POSTGRES_PASSWORD=password
   redis:
     image: 'redis:latest'
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3050:80'
   api:
     build:
       dockerfile: Dockerfile.dev
