@@ -17,20 +17,29 @@ const pgClient = new Pool({
     host: keys.pgHost,
     database: keys.pgDatabase,
     password: keys.pgPassword,
-    port: keys.pgPort
+    port: keys.pgPort,
+    ssl:
+        process.env.NODE_ENV !== 'production'
+        ? false
+        : { rejectUnauthorized: false },
 });
-pgClient.on('error', () => console.log('Lost PG connection'));
 
-pgClient
-    .query('CREATE TABLE IF NOT EXISTS values (number INT')
-    .catch((err) => console.log(err));
+//pgClient.on('error', () => console.log('Lost PG connection'));
+
+pgClient.on('connect', (client) => {
+    client
+        .query('CREATE TABLE IF NOT EXISTS values (number INT')
+        .catch((err) => console.log(err));
+});
+    
+    
 
 // Redis Client Setup
 const erdis = require('redis');
 const redisClient = redis.createClient({
     host: keys.redisHost,
-    port:keys.redisPort,
-    retry_strategy: () => 1000 //if connection is lost, try to reconnect to redis every 1 sec
+    port: keys.redisPort,
+    retry_strategy: () => 1000, //if connection is lost, try to reconnect to redis every 1 sec
 });
 const redisPublisher = redisClient.duplicate();
 
@@ -47,7 +56,7 @@ app.get('/values/all', async (req, res) => {
 });
 
 app.get('/values/current', async (req, res) => {
-    redisClient.hgetall('values', (err,values) => { //callback for async route data handling, redis library does not have promise support, thats why callbacks are being used
+    redisClient.hgetall('values', (err, values) => { //callback for async route data handling, redis library does not have promise support, thats why callbacks are being used
         res.send(values); 
     });
 });
@@ -60,12 +69,12 @@ app.post('/values', async (req, res) => {
     }
 
     redisClient.hset('values', index, 'Nothing yet!');
-    redisPublisher.publish('sert', index);
+    redisPublisher.publish('insert', index);
     pgClient.query('INSERT INTO values(number) VALUES($1)',[index]);
 
-    res.send({ working: true});
+    res.send({ working: true });
 });
 
 app.listen(5000, err => {
     console.log('Listening');
-})
+});

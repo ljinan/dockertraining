@@ -3,7 +3,11 @@ services:
   postgres:
     image: 'postgres:latest'
     environment:
-      - POSTGRES_PASSWORD=password
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=password
+      - PGPORT=5432
   redis:
     image: 'redis:latest'
   nginx:
@@ -24,8 +28,8 @@ services:
       # context is used to specify which folder to look for the dockerfile
       # provide a path to the server directory
     volumes:
-      - /home/node/app/node_modules
       - ./server:/home/node/app
+      - /home/node/app/node_modules
     # when environemnt variable is specified inside the docker-compose file, this information is not being encoded inside the image.
     # instead, it is only set in the container at runtime
     # variableName=value => sets a varialbe in the container at run time
@@ -33,25 +37,17 @@ services:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379 #default redis port
-      - PGUSER=postgres
-      - PGHOST=postgres
-      - PGDATABASE=postgres
-      - PGPASSWORD=postgres_password
-      - PGPORT=5432
   client:
     build:
       dockerfile: Dockerfile.dev
       context: ./client
     volumes:
-      - home/node/app/node_modules
       - ./client:/home/node/app
+      - /home/node/app/node_modules
   worker:
     build:
       dockerfile: Dockerfile.dev
       context: ./worker
     volumes:
-      - /home/node/app/node_modules
       - ./worker:/home/node/app
-
-
-#dummy commit
+      - /home/node/app/node_modules
