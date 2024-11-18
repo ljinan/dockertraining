@@ -1,5 +1,4 @@
 const keys = require('./keys');
-const redis = require('redis');
 
 //Express App Setup
 const express = require('express'); //require express library
@@ -8,7 +7,7 @@ const cors = require('cors');
 
 const app = express() //make new express application - the app is the object that is going to receive and response to any http request that is coming from or going back to react application
 app.use(cors()); // Cross-Origin Resource Sharing - allows us to make request from 1 domain which the react app is running on to a different domain, where the express api is running on
-app.unsubscribe(bodyParser.json()); //turn incoming request from react app into json value for the express api to work on
+app.use(bodyParser.json()); //turn incoming request from react app into json value for the express api to work on
 
 // Postgress Client Setup
 const { Pool } = require('pg');
@@ -28,14 +27,14 @@ const pgClient = new Pool({
 
 pgClient.on('connect', (client) => {
     client
-        .query('CREATE TABLE IF NOT EXISTS values (number INT')
+        .query('CREATE TABLE IF NOT EXISTS values (number INT)')
         .catch((err) => console.log(err));
 });
     
     
 
 // Redis Client Setup
-const erdis = require('redis');
+const redis = require('redis');
 const redisClient = redis.createClient({
     host: keys.redisHost,
     port: keys.redisPort,
@@ -75,6 +74,6 @@ app.post('/values', async (req, res) => {
     res.send({ working: true });
 });
 
-app.listen(5000, err => {
+app.listen(5000, (err) => {
     console.log('Listening');
 });
