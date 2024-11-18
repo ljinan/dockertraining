@@ -7,7 +7,8 @@ services:
       - PGHOST=postgres
       - PGDATABASE=postgres
       - PGPASSWORD=password
-      - PGPORT=5432
+    ports:
+      - '5432:5432'
   redis:
     image: 'redis:latest'
   nginx:
@@ -37,6 +38,11 @@ services:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379 #default redis port
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=password
+      - PGPORT=5432
   client:
     build:
       dockerfile: Dockerfile.dev
